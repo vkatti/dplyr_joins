@@ -1,5 +1,6 @@
 ---
 title: "dplyr Joins"
+always_allow_html: yes
 output: github_document
 ---
 
@@ -7,7 +8,6 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(omsvg)
-library(knitr)
 ```
 
 ## Introduction
@@ -41,7 +41,6 @@ svg_table <- function(df) {
   img
 }
 ```
-
 
 ```{r svg_sub_table, include=FALSE}
 svg_sub_table <- function(svg, df, x = 0, y = 0, shw = 50, missing_text = "NA", show_name = TRUE) {
@@ -79,31 +78,23 @@ svg_sub_table <- function(svg, df, x = 0, y = 0, shw = 50, missing_text = "NA", 
 
 ## Left Join
 
-Here, we will define the two tables `df1` and `df2` and perform a `left_join` on them.
+Here, we will define the two tables `df1` and `df2` and perform a `left_join` on them.  
+In the `left_join`, all rows in the left table `df1` are included and the rows with matching `id` in `df2` are included. If `df2` contains multiple rows for same `id`, the rows in `df1` get repeated for each unique value in `df2`. All rows in `df2` without an `id` match are excluded. All rows in `df1` without matching `id` in `df2` will be blank or `NA`
 
-```{r}
+```{r eval=FALSE}
 df1 <- data.frame(id = 1:5,
                   x = paste0("x", 1:5),
                   y = paste0("y", 1:5))
 
-df2 <- data.frame(id = c(1,3),
-                  z = c("z1","z3"))
+df2 <- data.frame(id = c(1, 1, 3, 6),
+                  z = c("z1", "z1", "z3", "z6"))
 
-df3 <- left_join(df1, df2, by = "id")
+df1_left_join_df2 <- left_join(df1, df2, by = "id")
 
-SVG(width = 700, height = 350) %>% 
+SVG(width = 700, height = 450) %>% 
   svg_sub_table(df = df1)  %>% 
   svg_sub_table(df = df2, x = 200) %>% 
-  svg_sub_table(df = df3, x = 350)
+  svg_sub_table(df = df1_left_join_df2, x = 350)
 ```
 
-
-
-```{r}
-
-```
-
-
-
-
-
+<img src="images/example1.svg"/>
